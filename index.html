@@ -199,16 +199,36 @@
             width: 100%;
         }
         
-        /* Hero Section */
+        /* Hero Section с видео фоном */
         .hero {
             min-height: 100vh;
-            background: 
-                linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.9)),
-                url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
             display: flex;
             align-items: center;
             padding-top: 80px;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            filter: brightness(0.4) contrast(1.2);
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.9));
+            z-index: 1;
         }
         
         .hero::after {
@@ -219,6 +239,7 @@
             width: 100%;
             height: 100px;
             background: linear-gradient(to top, var(--color-dark), transparent);
+            z-index: 1;
         }
         
         .hero-content {
@@ -468,6 +489,27 @@
             justify-content: center;
             font-size: 20px;
             color: var(--color-red);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .unit-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .unit-icon.fallback-icon {
+            display: flex;
+        }
+        
+        .unit-icon.loaded img {
+            display: block;
+        }
+        
+        .unit-icon.loaded .fallback-icon {
+            display: none;
         }
         
         .unit-name {
@@ -837,6 +879,16 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            .video-background {
+                display: none;
+            }
+            
+            .hero {
+                background: 
+                    linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.9)),
+                    url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            }
         }
         
         /* Animations */
@@ -877,6 +929,19 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--color-red-light);
         }
+        
+        /* Video fallback notice */
+        .video-fallback {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #666;
+            font-size: 12px;
+            z-index: 2;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -897,8 +962,14 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Section с видео фоном -->
     <section id="home" class="hero">
+        <!-- Видео фон -->
+        <video autoplay muted loop playsinline class="video-background" id="backgroundVideo">
+            <source src="background.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+        <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content">
                 <h1 class="fade-in">PMC <span>CRAMER</span><br>ЭЛИТНЫЕ ПОДРАЗДЕЛЕНИЯ</h1>
@@ -916,11 +987,11 @@
                 
                 <div class="stats fade-in stagger-delay-4">
                     <div class="stat-item">
-                        <div class="stat-number">10+</div>
-                        <div class="stat-label">Лет опыта у сотрудников</div>
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">Лет опыта</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">40+</div>
+                        <div class="stat-number">300+</div>
                         <div class="stat-label">Специалистов</div>
                     </div>
                     <div class="stat-item">
@@ -942,11 +1013,14 @@
             <h2 class="section-title fade-in">НАШИ ПОДРАЗДЕЛЕНИЯ</h2>
             
             <div class="units-grid">
-                <!-- Unit 1 -->
+                <!-- Unit 1 - ОШГ "ХОРС" -->
                 <div class="unit-card fade-in stagger-delay-1">
                     <div class="unit-header">
-                        <div class="unit-icon">
-                            <i class="fas fa-fist-raised"></i>
+                        <div class="unit-icon" data-unit="hors">
+                            <img src="hors_logo.png" alt="ОШГ ХОРС" onerror="handleImageError(this, 'hors')">
+                            <div class="fallback-icon">
+                                <i class="fas fa-fist-raised"></i>
+                            </div>
                         </div>
                         <div>
                             <h3 class="unit-name">ОШГ "ХОРС"</h3>
@@ -963,11 +1037,14 @@
                     </ul>
                 </div>
                 
-                <!-- Unit 2 - СТГ "СЕМАРГЛ" добавлен только в описание -->
+                <!-- Unit 2 - СТГ "СЕМАРГЛ" -->
                 <div class="unit-card fade-in stagger-delay-2">
                     <div class="unit-header">
-                        <div class="unit-icon">
-                            <i class="fas fa-user-secret"></i>
+                        <div class="unit-icon" data-unit="semargl">
+                            <img src="semargl_logo.png" alt="СТГ СЕМАРГЛ" onerror="handleImageError(this, 'semargl')">
+                            <div class="fallback-icon">
+                                <i class="fas fa-user-secret"></i>
+                            </div>
                         </div>
                         <div>
                             <h3 class="unit-name">СТГ "СЕМАРГЛ"</h3>
@@ -984,11 +1061,14 @@
                     </ul>
                 </div>
                 
-                <!-- Unit 3 -->
+                <!-- Unit 3 - ЛЭО "РАРОГ" -->
                 <div class="unit-card fade-in stagger-delay-3">
                     <div class="unit-header">
-                        <div class="unit-icon">
-                            <i class="fas fa-truck-moving"></i>
+                        <div class="unit-icon" data-unit="rarog">
+                            <img src="rarog_logo.png" alt="ЛЭО РАРОГ" onerror="handleImageError(this, 'rarog')">
+                            <div class="fallback-icon">
+                                <i class="fas fa-truck-moving"></i>
+                            </div>
                         </div>
                         <div>
                             <h3 class="unit-name">ЛЭО "РАРОГ"</h3>
@@ -1157,6 +1237,102 @@
     </footer>
 
     <script>
+        // Обработка фонового видео
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('backgroundVideo');
+            
+            // Проверяем, поддерживает ли браузер видео
+            if (video && video.canPlayType) {
+                // Пытаемся воспроизвести видео
+                video.play().catch(function(error) {
+                    console.log("Автовоспроизведение видео заблокировано:", error);
+                    // Показываем кнопку для ручного запуска видео
+                    showVideoPlayButton();
+                });
+            }
+            
+            // Загрузка иконок подразделений
+            loadUnitIcons();
+        });
+        
+        function showVideoPlayButton() {
+            const hero = document.querySelector('.hero');
+            const playButton = document.createElement('button');
+            playButton.innerHTML = '<i class="fas fa-play"></i> Включить видеофон';
+            playButton.className = 'btn';
+            playButton.style.position = 'absolute';
+            playButton.style.bottom = '20px';
+            playButton.style.left = '20px';
+            playButton.style.zIndex = '10';
+            playButton.onclick = function() {
+                const video = document.getElementById('backgroundVideo');
+                if (video) {
+                    video.play();
+                    playButton.remove();
+                }
+            };
+            hero.appendChild(playButton);
+        }
+        
+        // Загрузка иконок подразделений
+        function loadUnitIcons() {
+            const unitIcons = document.querySelectorAll('.unit-icon');
+            
+            unitIcons.forEach(icon => {
+                const img = icon.querySelector('img');
+                if (img) {
+                    // Проверяем, загрузилось ли изображение
+                    if (img.complete && img.naturalHeight !== 0) {
+                        icon.classList.add('loaded');
+                    } else {
+                        img.onload = function() {
+                            icon.classList.add('loaded');
+                        };
+                        img.onerror = function() {
+                            // Обработка ошибки загрузки изображения
+                            const unitType = icon.getAttribute('data-unit');
+                            handleImageError(img, unitType);
+                        };
+                    }
+                }
+            });
+        }
+        
+        // Обработчик ошибок загрузки изображений
+        function handleImageError(imgElement, unitType) {
+            const iconContainer = imgElement.parentElement;
+            // Показываем fallback иконку
+            iconContainer.classList.remove('loaded');
+            
+            // Можно попробовать загрузить из альтернативного источника
+            const alternativeSources = {
+                'hors': ['hors_logo.jpg', 'hors_logo.svg', 'hors_logo.webp'],
+                'semargl': ['semargl_logo.jpg', 'semargl_logo.svg', 'semargl_logo.webp'],
+                'rarog': ['rarog_logo.jpg', 'rarog_logo.svg', 'rarog_logo.webp']
+            };
+            
+            const sources = alternativeSources[unitType] || [];
+            let currentIndex = 0;
+            
+            function tryNextSource() {
+                if (currentIndex < sources.length) {
+                    imgElement.src = sources[currentIndex];
+                    currentIndex++;
+                }
+            }
+            
+            imgElement.onload = function() {
+                iconContainer.classList.add('loaded');
+            };
+            
+            imgElement.onerror = tryNextSource;
+            
+            // Попробуем первый альтернативный источник
+            if (sources.length > 0) {
+                imgElement.src = sources[0];
+            }
+        }
+        
         // Form submission handling
         document.getElementById('applicationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
