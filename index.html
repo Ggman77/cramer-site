@@ -213,7 +213,21 @@
             align-items: center;
             gap: 10px;
             margin-left: auto;
-            margin-right: 20px;
+            position: relative;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .user-info:hover {
+            background-color: rgba(192, 0, 0, 0.1);
         }
         
         .user-avatar {
@@ -234,21 +248,140 @@
             font-family: 'Oswald', sans-serif;
             font-size: 14px;
             color: var(--color-light);
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--color-dark);
+            border: 1px solid var(--color-red);
+            border-radius: 4px;
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1001;
+            margin-top: 10px;
+        }
+        
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+        
+        .dropdown-header {
+            padding: 15px;
+            background-color: rgba(192, 0, 0, 0.1);
+            border-bottom: 1px solid var(--color-red);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--color-red);
+            overflow: hidden;
+        }
+        
+        .dropdown-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .dropdown-user-info h4 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            color: var(--color-light);
+            margin-bottom: 2px;
+        }
+        
+        .dropdown-user-info p {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .dropdown-body {
+            padding: 15px;
+        }
+        
+        .user-stats {
+            margin-bottom: 15px;
+        }
+        
+        .user-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .user-stat:last-child {
+            border-bottom: none;
+        }
+        
+        .user-stat .label {
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        .user-stat .value {
+            color: var(--color-light);
+            font-weight: 600;
+        }
+        
+        .user-roles {
+            margin-top: 15px;
+        }
+        
+        .roles-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            color: var(--color-light);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .roles-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .role-badge {
+            background-color: var(--color-gray);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            color: var(--color-text);
+            border-left: 2px solid var(--color-red);
         }
         
         .logout-btn {
-            background: none;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(to right, var(--color-red), var(--color-red-dark));
+            color: white;
             border: none;
-            color: var(--color-text);
+            border-radius: 2px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            font-size: 12px;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
         
         .logout-btn:hover {
-            opacity: 1;
-            color: var(--color-red);
+            background: linear-gradient(to right, var(--color-red-light), var(--color-red));
         }
         
         /* Hero Section с видео фоном */
@@ -965,20 +1098,28 @@
             nav ul {
                 gap: 20px;
             }
+            
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                order: 1;
+                flex: 1;
+            }
+            
+            nav {
+                order: 3;
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .user-profile {
+                order: 2;
+            }
         }
         
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            nav ul {
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
             .hero h1 {
                 font-size: 2.5rem;
             }
@@ -1016,9 +1157,44 @@
             }
             
             .user-profile {
-                margin: 10px 0;
-                justify-content: center;
+                margin-left: 0;
+            }
+            
+            .user-dropdown {
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                left: 20px;
+                min-width: auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .logo {
+                order: 1;
                 width: 100%;
+                justify-content: center;
+            }
+            
+            nav {
+                order: 2;
+                width: 100%;
+            }
+            
+            nav ul {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .user-profile {
+                order: 3;
+                width: 100%;
+                justify-content: center;
             }
         }
         
@@ -1093,13 +1269,48 @@
             
             <!-- User Profile (будет показан после авторизации) -->
             <div class="user-profile" id="userProfile" style="display: none;">
-                <div class="user-avatar" id="userAvatar">
-                    <img src="" alt="Аватар">
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar" id="userAvatar">
+                        <img src="" alt="Аватар">
+                    </div>
+                    <div class="user-name" id="userName"></div>
                 </div>
-                <div class="user-name" id="userName"></div>
-                <button class="logout-btn" id="logoutBtn" title="Выйти">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+                
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-avatar" id="dropdownAvatar">
+                            <img src="" alt="Аватар">
+                        </div>
+                        <div class="dropdown-user-info">
+                            <h4 id="dropdownUserName"></h4>
+                            <p id="dropdownUserId"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="dropdown-body">
+                        <div class="user-stats">
+                            <div class="user-stat">
+                                <span class="label">На сервере с:</span>
+                                <span class="value" id="joinDate">Загрузка...</span>
+                            </div>
+                            <div class="user-stat">
+                                <span class="label">Ролей:</span>
+                                <span class="value" id="rolesCount">Загрузка...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="user-roles">
+                            <div class="roles-title">Роли на сервере:</div>
+                            <div class="roles-list" id="rolesList">
+                                <div class="role-badge">Загрузка...</div>
+                            </div>
+                        </div>
+                        
+                        <button class="logout-btn" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Выйти
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -1419,9 +1630,12 @@
             // ⚠️ ВАЖНО: Замените на свои данные из Discord Developer Portal
             clientId: "1449399234322235577", // Получить на https://discord.com/developers/applications
             redirectUri: window.location.origin + window.location.pathname, // Текущий URL
-            scope: "identify", // Только информация о пользователе
+            scope: "identify guilds guilds.members.read", // Добавлены разрешения для получения информации о сервере
             responseType: "token"
         };
+        
+        // Discord Server ID (ваш сервер)
+        const DISCORD_SERVER_ID = "9N7kq8hbQC"; // Замените на ID вашего сервера
         
         // Проверяем авторизацию при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
@@ -1462,25 +1676,27 @@
         });
         
         // Проверка статуса авторизации
-        function checkAuthStatus() {
+        async function checkAuthStatus() {
             const token = localStorage.getItem('discord_token');
             if (token) {
                 // Проверяем валидность токена
-                fetchDiscordUser(token).then(user => {
+                try {
+                    const user = await fetchDiscordUser(token);
                     if (user) {
                         showUserProfile(user);
                         showMainContent();
+                        // Загружаем информацию о сервере
+                        loadServerInfo(token);
                     } else {
                         // Токен невалидный
-                        localStorage.removeItem('discord_token');
-                        localStorage.removeItem('discord_user');
+                        clearAuthData();
                         showAuthSection();
                     }
-                }).catch(() => {
-                    localStorage.removeItem('discord_token');
-                    localStorage.removeItem('discord_user');
+                } catch (error) {
+                    console.error('Ошибка проверки авторизации:', error);
+                    clearAuthData();
                     showAuthSection();
-                });
+                }
             } else {
                 // Проверяем URL на наличие токена (после редиректа от Discord)
                 const hash = window.location.hash.substring(1);
@@ -1489,23 +1705,29 @@
                 
                 if (accessToken) {
                     // Получаем данные пользователя
-                    fetchDiscordUser(accessToken).then(user => {
+                    try {
+                        const user = await fetchDiscordUser(accessToken);
                         if (user) {
                             localStorage.setItem('discord_token', accessToken);
                             localStorage.setItem('discord_user', JSON.stringify(user));
                             showUserProfile(user);
                             showMainContent();
+                            // Загружаем информацию о сервере
+                            loadServerInfo(accessToken);
                             // Очищаем URL от токена
                             window.history.replaceState({}, document.title, window.location.pathname);
                         }
-                    });
+                    } catch (error) {
+                        console.error('Ошибка авторизации:', error);
+                        showAuthSection();
+                    }
                 } else {
                     showAuthSection();
                 }
             }
         }
         
-        // Показ секции авторизации
+        // Показать секцию авторизации
         function showAuthSection() {
             document.getElementById('auth').style.display = 'block';
             document.getElementById('userProfile').style.display = 'none';
@@ -1515,7 +1737,7 @@
             document.getElementById('applicationForm').style.pointerEvents = 'none';
         }
         
-        // Показ основного контента
+        // Показать основной контент
         function showMainContent() {
             document.getElementById('auth').style.display = 'none';
             
@@ -1533,11 +1755,14 @@
             }
         }
         
-        // Показ профиля пользователя
+        // Показать профиль пользователя
         function showUserProfile(user) {
             const userProfile = document.getElementById('userProfile');
             const userName = document.getElementById('userName');
             const userAvatar = document.getElementById('userAvatar').querySelector('img');
+            const dropdownUserName = document.getElementById('dropdownUserName');
+            const dropdownUserId = document.getElementById('dropdownUserId');
+            const dropdownAvatar = document.getElementById('dropdownAvatar').querySelector('img');
             
             // Форматируем имя пользователя
             const displayName = user.discriminator !== "0" ? 
@@ -1545,18 +1770,105 @@
                 user.username;
             
             userName.textContent = displayName;
+            dropdownUserName.textContent = displayName;
+            dropdownUserId.textContent = `ID: ${user.id}`;
             
             // Устанавливаем аватар
             if (user.avatar) {
-                const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=80`;
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
                 userAvatar.src = avatarUrl;
+                dropdownAvatar.src = avatarUrl;
             } else {
                 // Дефолтный аватар Discord
-                const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
+                const defaultAvatarNum = user.discriminator !== "0" ? user.discriminator % 5 : 0;
+                const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNum}.png`;
                 userAvatar.src = defaultAvatar;
+                dropdownAvatar.src = defaultAvatar;
             }
             
             userProfile.style.display = 'flex';
+        }
+        
+        // Загрузка информации о сервере Discord
+        async function loadServerInfo(token) {
+            try {
+                // Получаем информацию о сервере и ролях пользователя
+                const serverResponse = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_SERVER_ID}/member`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (serverResponse.ok) {
+                    const memberData = await serverResponse.json();
+                    updateServerInfo(memberData);
+                } else {
+                    // Если нет доступа к информации о сервере, показываем общую информацию
+                    showGeneralInfo();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки информации о сервере:', error);
+                showGeneralInfo();
+            }
+        }
+        
+        // Обновление информации о сервере
+        function updateServerInfo(memberData) {
+            // Дата присоединения к серверу
+            if (memberData.joined_at) {
+                const joinDate = new Date(memberData.joined_at);
+                const formattedDate = joinDate.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                document.getElementById('joinDate').textContent = formattedDate;
+                
+                // Вычисляем сколько дней на сервере
+                const today = new Date();
+                const diffTime = Math.abs(today - joinDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('joinDate').textContent = `${formattedDate} (${diffDays} дней)`;
+            }
+            
+            // Роли пользователя
+            if (memberData.roles && memberData.roles.length > 0) {
+                document.getElementById('rolesCount').textContent = memberData.roles.length;
+                
+                // Здесь можно добавить запрос для получения названий ролей
+                // Но для этого нужен бот с правами на сервере
+                const rolesList = document.getElementById('rolesList');
+                rolesList.innerHTML = '';
+                
+                // Если есть названия ролей в данных
+                if (memberData.roles_details) {
+                    memberData.roles_details.forEach(role => {
+                        const roleBadge = document.createElement('div');
+                        roleBadge.className = 'role-badge';
+                        roleBadge.textContent = role.name;
+                        roleBadge.style.borderLeftColor = role.color ? `#${role.color.toString(16).padStart(6, '0')}` : 'var(--color-red)';
+                        rolesList.appendChild(roleBadge);
+                    });
+                } else {
+                    // Если нет деталей ролей, показываем просто количество
+                    memberData.roles.forEach(roleId => {
+                        const roleBadge = document.createElement('div');
+                        roleBadge.className = 'role-badge';
+                        roleBadge.textContent = `Роль #${roleId.substring(0, 4)}`;
+                        rolesList.appendChild(roleBadge);
+                    });
+                }
+            } else {
+                document.getElementById('rolesCount').textContent = '0';
+                document.getElementById('rolesList').innerHTML = '<div class="role-badge">Нет ролей</div>';
+            }
+        }
+        
+        // Показать общую информацию (если нет доступа к серверу)
+        function showGeneralInfo() {
+            document.getElementById('joinDate').textContent = 'Информация недоступна';
+            document.getElementById('rolesCount').textContent = 'Нет данных';
+            document.getElementById('rolesList').innerHTML = '<div class="role-badge">Для просмотра ролей нужны права бота</div>';
         }
         
         // Проверка авторизации
@@ -1595,10 +1907,15 @@
             }
         }
         
-        // Выход из системы
-        function logout() {
+        // Очистка данных авторизации
+        function clearAuthData() {
             localStorage.removeItem('discord_token');
             localStorage.removeItem('discord_user');
+        }
+        
+        // Выход из системы
+        function logout() {
+            clearAuthData();
             showAuthSection();
         }
         
